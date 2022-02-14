@@ -1,0 +1,30 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+functions:
+- github:
+    branch: master
+    deploy_on_push: true
+    repo: digitalocean/sample-functions-nodejs-java-qrcodemultilang
+  name: qrcode-multi-lang-api
+  routes:
+  - path: /api
+  source_dir: /
+name: qrcode-multi-lang
+region: blr
+static_sites:
+- build_command: ./build.sh
+  environment_slug: html
+  envs:
+  - key: FUNCTION_API_URL
+    scope: BUILD_TIME
+    value: ${qrcode-multi-lang-api.PUBLIC_URL}
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: digitalocean/sample-functions-nodejs-java-qrcodemultilang
+  name: web-app
+  output_dir: dist
+  routes:
+  - path: /
+  source_dir: /client
